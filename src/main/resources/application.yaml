@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: portafolio-backend
+
+  datasource:
+    # Usamos la IP de tu VM 192.168.40.139 como fallback si la variable no existe
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://192.168.1.17:5432/db_porfolio}
+    username: ${SPRING_DATASOURCE_USERNAME:rafael}
+    password: ${SPRING_DATASOURCE_PASSWORD:162003}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          time_zone: UTC
+
+  mail:
+    # Agregué valores por defecto para evitar errores de placeholder al iniciar
+    host: smtp.gmail.com
+    port: 587
+    username: ${SPRING_MAIL_USERNAME:ejemplo@gmail.com}
+    password: ${SPRING_MAIL_PASSWORD:tu_app_password_aqui}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: ${PORT:8081}
+
+google:
+  oauth:
+    # Agregué valor por defecto para evitar que falle el contexto de Spring
+    clientId: ${GOOGLE_CLIENT_ID:tu_google_client_id_temporal}
+
+app:
+  jwt:
+    # SOLUCIÓN AL ERROR: Se agregó una clave secreta por defecto
+    secret: ${APP_JWT_SECRET:EstaEsUnaClaveSecretaMuyLargaParaJWTDeAlMenos32CaracteresDeLargo123!}
+    expirationMinutes: 1440
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:4200}
