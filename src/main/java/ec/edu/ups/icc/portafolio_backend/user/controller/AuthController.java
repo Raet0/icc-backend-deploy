@@ -18,11 +18,10 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // @PostMapping("/register")
-    // public AuthResponse register(@RequestBody @Valid RegisterRequest request) {
-    //     // Este método debe guardar al usuario con un ROL básico (USER)
-    //     return authService.register(request);
-    // }
+    @PostMapping("/register")
+    public AuthResponse register(@RequestBody @Valid RegisterRequest request) {
+        return authService.register(request);
+    }
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody @Valid LoginRequest request) {

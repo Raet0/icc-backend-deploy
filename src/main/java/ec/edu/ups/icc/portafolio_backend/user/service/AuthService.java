@@ -48,6 +48,22 @@ public class AuthService {
         return new AuthResponse(token, user.getName(), user.getRole().name());
     }
 
+    public AuthResponse register(RegisterRequest request) {
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            throw new RuntimeException("El email ya está registrado");
+        }
+        
+        User user = new User();
+        user.setName(request.name());
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setRole(Role.USER);
+        userRepository.save(user);
+
+        String token = jwtService.generateToken(user.getEmail());
+        return new AuthResponse(token, user.getName(), user.getRole().name());
+    }
+
     public AuthResponse registerFirstAdmin(RegisterRequest request) {
         if (userRepository.countByRole(Role.ADMIN) > 0) {
             throw new RuntimeException("Ya existe un administrador.");
