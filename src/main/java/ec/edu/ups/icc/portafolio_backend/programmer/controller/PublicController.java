@@ -43,10 +43,13 @@ public class PublicController {
 
     @GetMapping("/advisories")
     public List<AdvisoryResponse> listByRequester(
-        @RequestParam String email,
+        @RequestParam(required = false) String email,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "50") int size
     ) {
+        if (email == null || email.isBlank()) {
+            return List.of();
+        }
         return advisoryService.listByRequester(email, page, size);
     }
 

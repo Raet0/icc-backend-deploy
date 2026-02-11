@@ -39,17 +39,19 @@ public class ProgrammerService {
         profile.setPhotoUrl(request.photoUrl());
 
         if (request.socials() != null) {
-            profile.setSocials(
-                request.socials().stream()
-                    .map(dto -> {
-                        SocialLink link = new SocialLink();
-                        link.setName(dto.name());
-                        link.setUrl(dto.url());
-                        link.setProfile(profile);
-                        return link;
-                    })
-                    .collect(Collectors.toList())
-            );
+            // Clear existing socials to avoid orphan deletion issues
+            profile.getSocials().clear();
+            
+            // Add new socials
+            request.socials().stream()
+                .map(dto -> {
+                    SocialLink link = new SocialLink();
+                    link.setName(dto.name());
+                    link.setUrl(dto.url());
+                    link.setProfile(profile);
+                    return link;
+                })
+                .forEach(profile.getSocials()::add);
         }
 
         profileRepository.save(profile);
