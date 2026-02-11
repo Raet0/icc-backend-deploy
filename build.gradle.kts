@@ -39,6 +39,7 @@ dependencies {
 
     // Email
     implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("com.sendgrid:sendgrid-java:4.10.2")
 
     // Swagger / OpenAPI
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")

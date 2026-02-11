@@ -20,22 +20,12 @@ spring:
           time_zone: UTC
 
   mail:
-    # SendGrid configuration for Render
-    host: smtp.sendgrid.net
-    port: 587
+    # Solo necesitamos el username para el FROM address
     username: ${SPRING_MAIL_USERNAME:ejemplo@gmail.com}
-    password: ${SENDGRID_API_KEY:tu_sendgrid_api_key_aqui}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
-        debug: false
+
+sendgrid:
+  api:
+    key: ${SENDGRID_API_KEY:tu_sendgrid_api_key_aqui}
 
 server:
   port: ${PORT:8080}
