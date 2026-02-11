@@ -6,6 +6,8 @@ import ec.edu.ups.icc.portafolio_backend.programmer.entity.AvailabilitySlot;
 import ec.edu.ups.icc.portafolio_backend.programmer.entity.Modality;
 import ec.edu.ups.icc.portafolio_backend.programmer.repository.AvailabilityRepository;
 import ec.edu.ups.icc.portafolio_backend.programmer.repository.ProgrammerProfileRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import java.util.List;
 
 @Service
 public class AvailabilityService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AvailabilityService.class);
 
     private final AvailabilityRepository availabilityRepository;
     private final ProgrammerProfileRepository profileRepository;
@@ -85,9 +89,15 @@ public class AvailabilityService {
 
     private LocalTime parseTime(String raw) {
         try {
-            return LocalTime.parse(raw);
+            logger.info("Parseando hora: '{}' (length: {}, class: {})", raw, raw.length(), raw.getClass().getName());
+            
+            // Formato estándar: HH:MM o HH:MM:SS
+            LocalTime time = LocalTime.parse(raw);
+            logger.info("  Resultado: {} ({})", time, time.getClass().getName());
+            return time;
         } catch (Exception e) {
-            throw new RuntimeException("Hora inválida");
+            logger.error("Error parseando '{}': {}", raw, e.getMessage());
+            throw new RuntimeException("Hora inválida: " + raw + " (" + e.getMessage() + ")");
         }
     }
 
