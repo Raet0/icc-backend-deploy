@@ -33,8 +33,8 @@ public class ProgrammerProfile {
     @Column(name = "skill")
     private List<String> skills = new ArrayList<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "programmer_socials", joinColumns = @JoinColumn(name = "profile_id"))
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<SocialLink> socials = new ArrayList<>();
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

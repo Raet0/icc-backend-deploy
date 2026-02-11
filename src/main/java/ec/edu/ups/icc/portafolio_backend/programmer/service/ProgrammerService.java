@@ -41,7 +41,13 @@ public class ProgrammerService {
         if (request.socials() != null) {
             profile.setSocials(
                 request.socials().stream()
-                    .map(dto -> new SocialLink(dto.name(), dto.url()))
+                    .map(dto -> {
+                        SocialLink link = new SocialLink();
+                        link.setName(dto.name());
+                        link.setUrl(dto.url());
+                        link.setProfile(profile);
+                        return link;
+                    })
                     .collect(Collectors.toList())
             );
         }
