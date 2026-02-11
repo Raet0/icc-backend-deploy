@@ -26,18 +26,20 @@ public class NotificationService {
 
     public void notifyByEmail(String to, String subject, String body) {
         if (mailFrom == null || mailFrom.isBlank()) {
-            logger.warn("Correo no enviado: falta spring.mail.username");
+            logger.warn("Correo no enviado a {}: falta spring.mail.username", to);
             return;
         }
         try {
+            logger.info("Enviando correo a {} desde {}", to, mailFrom);
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(mailFrom);
             message.setTo(to);
             message.setSubject(subject);
             message.setText(body);
             mailSender.send(message);
+            logger.info("Correo enviado exitosamente a {}", to);
         } catch (Exception ex) {
-            logger.error("Error enviando correo a {}", to, ex);
+            logger.error("Error enviando correo a {}: {}", to, ex.getMessage(), ex);
         }
     }
 
