@@ -98,7 +98,13 @@ public class AdvisoryService {
         advisory.setResponse(request.response());
         advisoryRepository.save(advisory);
 
-        notificationService.notifyAdvisoryUpdated(advisory);
+        logger.info("Actualizando asesoría id={} a estado {}, notificando...", id, nextStatus);
+        try {
+            notificationService.notifyAdvisoryUpdated(advisory);
+            logger.info("Notificaciones enviadas para asesoría id={}", id);
+        } catch (Exception e) {
+            logger.error("Error notificando actualizacion de asesoría id={}: {}", id, e.getMessage(), e);
+        }
 
         return toResponse(advisory);
     }
