@@ -20,11 +20,11 @@ spring:
           time_zone: UTC
 
   mail:
-    # Agregué valores por defecto para evitar errores de placeholder al iniciar
-    host: smtp.gmail.com
+    # SendGrid configuration for Render
+    host: smtp.sendgrid.net
     port: 587
     username: ${SPRING_MAIL_USERNAME:ejemplo@gmail.com}
-    password: ${SPRING_MAIL_PASSWORD:tu_app_password_aqui}
+    password: ${SENDGRID_API_KEY:tu_sendgrid_api_key_aqui}
     properties:
       mail:
         smtp:
