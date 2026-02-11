@@ -8,6 +8,8 @@ import ec.edu.ups.icc.portafolio_backend.programmer.entity.AdvisoryStatus;
 import ec.edu.ups.icc.portafolio_backend.programmer.repository.AdvisoryRepository;
 import ec.edu.ups.icc.portafolio_backend.programmer.repository.AvailabilityRepository;
 import ec.edu.ups.icc.portafolio_backend.programmer.repository.ProgrammerProfileRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import java.util.List;
 
 @Service
 public class AdvisoryService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AdvisoryService.class);
 
     private final AdvisoryRepository advisoryRepository;
     private final ProgrammerProfileRepository profileRepository;
@@ -122,11 +126,15 @@ public class AdvisoryService {
         DayOfWeek day = scheduledAt.getDayOfWeek();
         LocalTime time = scheduledAt.toLocalTime();
 
-        boolean matches = slots.stream().anyMatch(s ->
-            s.getDay() == day &&
-            !time.isBefore(s.getStartTime()) &&
-            time.isBefore(s.getEndTime())
-        );
+        logger.info("Validando disponibilidad - Día: {}, Hora: {}, Slots disponibles: {}", day, time, slots.size());
+        
+        boolean matches = slots.stream().anyMatch(s -> {
+            boolean dayMatches = s.getDay() == day;
+            boolean timeMatches = !time.isBefore(s.getStartTime()) && !time.isAfter(s.getEndTime());
+            logger.info("  Slot - Día: {}, Rango: {}..{}, DayMatch: {}, TimeMatch: {}", 
+                s.getDay(), s.getStartTime(), s.getEndTime(), dayMatches, timeMatches);
+            return dayMatches && timeMatches;
+        });
 
         if (!matches) {
             throw new RuntimeException("Horario fuera de la disponibilidad del programador");
