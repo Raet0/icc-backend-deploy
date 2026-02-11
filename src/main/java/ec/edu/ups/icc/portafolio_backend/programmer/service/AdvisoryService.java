@@ -126,13 +126,23 @@ public class AdvisoryService {
         DayOfWeek day = scheduledAt.getDayOfWeek();
         LocalTime time = scheduledAt.toLocalTime();
 
-        logger.info("Validando disponibilidad - Día: {}, Hora: {}, Slots disponibles: {}", day, time, slots.size());
+        logger.info("=== VALIDATE AVAILABILITY ===");
+        logger.info("Requested: Day={}, Time={}", day, time);
+        
+        for (var s : slots) {
+            logger.info("Slot DB: Day={}, StartTime={} (type:{}), EndTime={} (type:{})", 
+                s.getDay(), 
+                s.getStartTime(), 
+                s.getStartTime().getClass().getSimpleName(),
+                s.getEndTime(),
+                s.getEndTime().getClass().getSimpleName());
+        }
         
         boolean matches = slots.stream().anyMatch(s -> {
             boolean dayMatches = s.getDay() == day;
             boolean timeMatches = !time.isBefore(s.getStartTime()) && !time.isAfter(s.getEndTime());
-            logger.info("  Slot - Día: {}, Rango: {}..{}, DayMatch: {}, TimeMatch: {}", 
-                s.getDay(), s.getStartTime(), s.getEndTime(), dayMatches, timeMatches);
+            logger.info("  Checking: Day={} (matches={}), Time {} vs {}-{} (matches={})", 
+                s.getDay(), dayMatches, time, s.getStartTime(), s.getEndTime(), timeMatches);
             return dayMatches && timeMatches;
         });
 
