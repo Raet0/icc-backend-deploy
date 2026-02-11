@@ -10,3 +10,7 @@ services:
         value: 268830759551-j9jihmbj55km5n1rero90f2pt2i1btuf.apps.googleusercontent.com
       - key: APP_CORS_ALLOWED_ORIGINS
         value: https://ubuntu.tail88ee04.ts.net
+      - key: SPRING_MAIL_USERNAME
+        value: imataco22@gmail.com
+      - key: SPRING_MAIL_PASSWORD
+        value: bkegbuvfofkouldt
