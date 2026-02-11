@@ -3,10 +3,10 @@ spring:
     name: portafolio-backend
 
   datasource:
-    # Usamos la IP de tu VM 192.168.40.139 como fallback si la variable no existe
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://192.168.1.17:5432/db_porfolio}
-    username: ${SPRING_DATASOURCE_USERNAME:rafael}
-    password: ${SPRING_DATASOURCE_PASSWORD:162003}
+    # Render + Neon: construimos el URL desde variables PG*, con fallback local
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:db_porfolio}?sslmode=${PGSSLMODE:require}}
+    username: ${SPRING_DATASOURCE_USERNAME:${PGUSER:rafael}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${PGPASSWORD:162003}}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -33,7 +33,7 @@ spring:
             enable: true
 
 server:
-  port: ${PORT:8081}
+  port: ${PORT:8080}
 
 google:
   oauth:

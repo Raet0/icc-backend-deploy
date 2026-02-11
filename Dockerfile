@@ -6,6 +6,7 @@ RUN ./gradlew bootJar
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=build /app/build/libs/portafolio-backend-0.0.1-SNAPSHOT.jar app.jar
+# Copy the built jar regardless of versioned filename
+COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app/app.jar"]

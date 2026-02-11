@@ -14,6 +14,7 @@ import ec.edu.ups.icc.portafolio_backend.admin.dto.UpdateUserRequest;
 import ec.edu.ups.icc.portafolio_backend.admin.dto.UserResponse;
 import ec.edu.ups.icc.portafolio_backend.admin.entity.AdminAudit;
 import ec.edu.ups.icc.portafolio_backend.admin.repository.AdminRepository;
+import ec.edu.ups.icc.portafolio_backend.programmer.repository.ProgrammerProfileRepository;
 import ec.edu.ups.icc.portafolio_backend.programmer.entity.Role;
 import ec.edu.ups.icc.portafolio_backend.user.entity.User;
 import ec.edu.ups.icc.portafolio_backend.user.repository.UserRepository;
@@ -24,12 +25,14 @@ public class AdminService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AdminRepository adminRepository;
+    private final ProgrammerProfileRepository profileRepository;
 
     public AdminService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-            AdminRepository adminRepository) {
+            AdminRepository adminRepository, ProgrammerProfileRepository profileRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.adminRepository = adminRepository;
+        this.profileRepository = profileRepository;
     }
 
     public UserResponse createUser(Long adminId, CreateUserRequest request) {
@@ -73,6 +76,13 @@ public class AdminService {
                 "Un administrador no puede eliminarse a si mismo"
             );
         }
-        userRepository.deleteById(userId);
+        User user = userRepository.findById(userId).orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado")
+        );
+        if (user.getRole() == Role.PROGRAMMER) {
+            profileRepository.findByUserId(userId)
+                .ifPresent(profileRepository::delete);
+        }
+        userRepository.delete(user);
     }
 }
