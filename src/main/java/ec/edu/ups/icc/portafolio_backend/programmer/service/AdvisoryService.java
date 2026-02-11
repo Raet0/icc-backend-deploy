@@ -139,9 +139,15 @@ public class AdvisoryService {
 
     private LocalDateTime parseDateTime(String raw) {
         try {
+            // Soportar ambos formatos: con y sin segundos
+            // "2026-02-11T10:30" o "2026-02-11T10:30:00"
+            if (raw.contains(":") && raw.split(":").length == 2) {
+                // Formato sin segundos, agregar :00
+                raw = raw + ":00";
+            }
             return LocalDateTime.parse(raw);
         } catch (Exception e) {
-            throw new RuntimeException("Formato de fecha inválido");
+            throw new RuntimeException("Formato de fecha inválido: " + e.getMessage());
         }
     }
 
